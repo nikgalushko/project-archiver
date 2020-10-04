@@ -1,10 +1,13 @@
 package main
 
-import "os"
+import (
+	"flag"
+	"fmt"
+	"log"
+	"os"
 
-import "flag"
-
-import "fmt"
+	"github.com/valenok-husky/pa/internal/pa"
+)
 
 func main() {
 	archiveCommand := flag.NewFlagSet("archive", flag.ExitOnError)
@@ -20,8 +23,14 @@ func main() {
 		showCommand.Parse(os.Args[2:])
 	}
 
+	archiver, err := pa.New()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	if archiveCommand.Parsed() {
 		fmt.Println(*archiveType)
+		log.Fatal(archiver.Archive("", pa.Local))
 	}
 
 	if showCommand.Parsed() {
